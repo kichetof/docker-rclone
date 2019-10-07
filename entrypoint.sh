@@ -6,9 +6,9 @@ set -e
 echo "INFO: Running $(rclone --version | head -n 1)"
 
 # Make sure sync/copy command is ok
-if [ "$(echo "$RCLONE_CMD" | tr '[:lower:]' '[:upper:]')" != "SYNC" ] && [ "$(echo "$RCLONE_CMD" | tr '[:lower:]' '[:upper:]')" != "COPY" ] && [ "$(echo "$RCLONE_CMD" | tr '[:lower:]' '[:upper:]')" != "MOVE" ]
+if [ "$(echo "$RCLONE_CMD" | tr '[:lower:]' '[:upper:]')" != "DEDUPE" ]
 then
-  echo "WARNING: rclone command '$RCLONE_CMD' is not supported by this container, please use sync/copy/move. Stopping."
+  echo "WARNING: rclone command '$RCLONE_CMD' is not supported by this container, please use dedupe. Stopping."
   exit 1
 fi
 
@@ -42,13 +42,13 @@ fi
 rm -f /tmp/sync.pid
 
 # Check for source and destination ; launch config if missing
-if [ -z "$SYNC_SRC" ] || [ -z "$SYNC_DEST" ]
+if [ -z "$SYNC_SRC" ]
 then
-  echo "INFO: No SYNC_SRC and SYNC_DEST found. Starting rclone config"
+  echo "INFO: No SYNC_SRC found. Starting rclone config"
   rclone config $RCLONE_OPTS
-  echo "INFO: Define SYNC_SRC and SYNC_DEST to start sync process."
+  echo "INFO: Define SYNC_SRC to start sync process."
 else
-  # SYNC_SRC and SYNC_DEST setup
+  # SYNC_SRC setup
   # run sync either once or in cron depending on CRON
 
   #Create fail URL if CHECK_URL is populated but FAIL_URL is not 
