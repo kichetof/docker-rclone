@@ -1,15 +1,15 @@
 ARG BASE=alpine:latest
 FROM ${BASE}
 
-LABEL maintainer="pfidr"
+LABEL maintainer="kichetof"
 
 ARG RCLONE_VERSION=current
 ARG ARCH=amd64
 ENV SYNC_SRC=
-ENV SYNC_OPTS=-v
+ENV SYNC_OPTS=--dedupe-mode newest
 ENV SYNC_OPTS_EVAL=
 ENV SYNC_ONCE=
-ENV RCLONE_CMD=sync
+ENV RCLONE_CMD=dedupe
 ENV RCLONE_DIR_CMD=ls
 ENV RCLONE_DIR_CHECK_SKIP=
 ENV RCLONE_OPTS="--config /config/rclone.conf"
