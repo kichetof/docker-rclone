@@ -1,6 +1,6 @@
 # docker-rclone
 
-Docker image to perform a [rclone](http://rclone.org) sync based on a cron schedule, with [healthchecks.io](https://healthchecks.io) monitoring.
+Docker image to perform a [rclone](http://rclone.org) dedupe based on a cron schedule, with [healthchecks.io](https://healthchecks.io) monitoring.
 
 rclone is a command line program to sync files and directories to and from:
 
@@ -39,12 +39,11 @@ $ docker run --rm -it -v $(pwd)/config:/config pfidr34/rclone
 
 A few environment variables allow you to customize the behavior of rclone:
 
-* `SYNC_SRC` source location for `rclone sync/copy/move` command
-* `SYNC_DEST` destination location for `rclone sync/copy/move` command
-* `SYNC_OPTS` additional options for `rclone sync/copy/move` command. Defaults to `-v`
-* `SYNC_OPTS_EVAL` further additional options for `rclone sync/copy/move` command. The variables and commands in the string are first interpolated like in a shell. The interpolated string is appended to SYNC_OPTS. That means '--backup-dir /old\`date -I\`' first evaluates to '--backup-dir /old2019-09-12', which is then appended to SYNC_OPTS. The evaluation happens immediately before rclone is called.
+* `SYNC_SRC` source location for `rclone dedupe` command
+* `SYNC_OPTS` additional options for `rclone dedupe` command. Defaults to `--dedupe-mode newest`
+* `SYNC_OPTS_EVAL` further additional options for `rclone dedupe` command. The variables and commands in the string are first interpolated like in a shell. The interpolated string is appended to SYNC_OPTS. That means '--backup-dir /old\`date -I\`' first evaluates to '--backup-dir /old2019-09-12', which is then appended to SYNC_OPTS. The evaluation happens immediately before rclone is called.
 * `SYNC_ONCE` set variable to only run the sync one time and then exit the container
-* `RCLONE_CMD` set variable to `sync` `copy` or `move`  when running rclone. Defaults to `sync`
+* `RCLONE_CMD` set variable to `dedupe`  when running rclone. Defaults to `dedupe`
 * `RCLONE_DIR_CMD` set variable to `ls` or `lsf` for source directory check style. Defaults to `ls`
 * `RCLONE_DIR_CHECK_SKIP` set variable to skip source directory check before sync. *Use with caution*
 * `CRON` crontab schedule `0 0 * * *` to perform sync every midnight. Also supprorts cron shortcuts: `@yearly` `@monthly` `@weekly` `@daily` `@hourly`
@@ -52,7 +51,7 @@ A few environment variables allow you to customize the behavior of rclone:
 * `FORCE_SYNC` set variable to perform a sync upon boot
 * `CHECK_URL` [healthchecks.io](https://healthchecks.io) url or similar cron monitoring to perform a `GET` after a successful sync
 * `FAIL_URL` Fail URL to perform a `GET` after unsuccessful execution. By default this is `CHECK_URL` with appended "/fail" at the end
-* `SYNC_OPTS` additional options for `rclone sync` command. Defaults to `-v`
+* `SYNC_OPTS` additional options for `rclone dedupe` command. Defaults to `--dedupe-mode newest`
 * `OUTPUT_LOG` set variable to output log file to /logs
 * `ROTATE_LOG` set variable to delete logs older than specified days from /logs
 * `TZ` set the [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) to use for the cron and log `America/Chicago`
